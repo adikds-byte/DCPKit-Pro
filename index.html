@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DCPKit PRO V2.5 — Simulasi Pengujian DCPT, Analisis Daya Dukung Dacite, Schedule Closure Timbunan & Supervision Command Pad C TSF Banyuwangi</title>
+    <title>DCPKit PRO V2.7 — Simulasi Pengujian DCPT, Daya Dukung Dacite, Schedule Closure, Jadwal Pekerjaan Sep 2026–Feb 2027, Monitoring Cuaca Windy & Lost Time Rain Delay Pad C TSF Banyuwangi</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -549,6 +549,12 @@
             </button>
             <button onclick="switchTab('tabFreq')" id="btnTabFreq" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-slate-700 text-slate-300 hover:text-white transition flex items-center gap-2">
                 <i class="fa-solid fa-table-cells-large text-rose-400"></i> 07. Frekuensi Uji Timbunan Zona 1-8
+            </button>
+            <button onclick="switchTab('tabSch2')" id="btnTabSch2" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-lime-500/70 text-lime-300 hover:text-white transition flex items-center gap-2" title="Jadwal Umum Pekerjaan September 2026 - Februari 2027 (Tanggal & Item Editable)">
+                <i class="fa-solid fa-diagram-project text-lime-400"></i> 08. Jadwal Pekerjaan
+            </button>
+            <button onclick="switchTab('tabWx')" id="btnTabWx" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-sky-500/70 text-sky-300 hover:text-white transition flex items-center gap-2" title="Monitoring Cuaca Lokasi Kerja: Peta Windy + Pencatatan Cuaca Harian + Laporan Harian & Bulanan">
+                <i class="fa-solid fa-cloud-sun-rain text-sky-400"></i> 09. Monitoring Cuaca
             </button>
         </div>
     </nav>
@@ -1924,6 +1930,194 @@
         <div id="freqAnalysisText" class="text-[11px] leading-relaxed text-slate-300 space-y-1.5"></div>
       </div>
 
+    
+    </section>
+
+    <!-- ==================== TAB 08: JADWAL PEKERJAAN (UMUM) ==================== -->
+    <section id="tabSch2" class="tab-pane hidden space-y-4">
+        <div class="cmd-card p-3 flex flex-wrap justify-between items-center gap-2 no-print font-mono text-xs">
+            <span class="text-slate-300 font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-diagram-project text-lime-400"></i> 08. JADWAL PEKERJAAN — PROGRAM PENGAWASAN GEOTEKNIK PAD C EXT. DAM 6 TSF BANYUWANGI (SEP 2026 – FEB 2027)
+            </span>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span id="sch2Badge" class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/60 text-emerald-300 font-bold text-[10px]">SINKRON AKTIF ✅</span>
+                <button onclick="sch2ExportPDF()" class="px-2.5 py-1 rounded bg-rose-950 hover:bg-rose-900 border border-rose-500/60 text-rose-300 font-bold text-[10px] transition"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                <button onclick="sch2ExportExcel()" class="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/60 text-emerald-300 font-bold text-[10px] transition"><i class="fa-solid fa-file-excel"></i> EXCEL</button>
+            </div>
+        </div>
+
+        <!-- PENGATURAN JADWAL (EDITABLE) -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-lime-300 mb-3 flex items-center gap-2 font-mono"><i class="fa-solid fa-sliders"></i> PENGATURAN JADWAL — TANGGAL MULAI & SELESAI PEKERJAAN (EDITABLE)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 font-mono text-[11px]">
+                <div>
+                    <label class="text-slate-400 text-[10px] font-bold block mb-1">NAMA PROGRAM</label>
+                    <input id="sch2Name" type="text" class="w-full bg-slate-950 border border-lime-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400" value="Program Pengawasan Geoteknik Pad C Ext. Dam 6 TSF Banyuwangi">
+                </div>
+                <div>
+                    <label class="text-slate-400 text-[10px] font-bold block mb-1">TANGGAL MULAI PEKERJAAN</label>
+                    <input id="sch2Start" type="date" class="w-full bg-slate-950 border border-lime-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400" value="2026-09-01">
+                </div>
+                <div>
+                    <label class="text-slate-400 text-[10px] font-bold block mb-1">TARGET SELESAI PEKERJAAN</label>
+                    <input id="sch2End" type="date" class="w-full bg-slate-950 border border-lime-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400" value="2027-02-28">
+                </div>
+                <div class="flex items-end">
+                    <button onclick="sch2SaveSettings()" class="w-full px-3 py-2 rounded-lg bg-lime-800 hover:bg-lime-700 border border-lime-400/60 text-white font-bold text-[11px] transition"><i class="fa-solid fa-floppy-disk"></i> SIMPAN & SINKRONKAN JADWAL</button>
+                </div>
+            </div>
+            <p id="sch2SetInfo" class="text-[9.5px] text-slate-500 mt-2 font-mono"></p>
+        </div>
+
+        <!-- KPI -->
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2.5">
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Durasi Program</div><div id="sch2KpiDur" class="text-lg font-black text-cyan-400 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">hari kerja terpasang</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Hari Berjalan</div><div id="sch2KpiRun" class="text-lg font-black text-amber-400 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">sejak tanggal mulai</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Hari Tersisa</div><div id="sch2KpiLeft" class="text-lg font-black text-sky-400 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">menuju target selesai</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">% Waktu</div><div id="sch2KpiTime" class="text-lg font-black text-slate-200 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">berjalan / total</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Progress Aktual</div><div id="sch2KpiProg" class="text-lg font-black text-emerald-400 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">rerata bobot item</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Deviasi</div><div id="sch2KpiDev" class="text-lg font-black font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono" id="sch2KpiStatus">status program</div></div>
+        </div>
+
+        <!-- ITEM PEKERJAAN (CRUD) -->
+        <div class="cmd-card p-4 sm:p-5">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                <h3 class="text-xs font-bold text-lime-300 font-mono flex items-center gap-2"><i class="fa-solid fa-list-check"></i> ITEM PEKERJAAN (TAMBAH / EDIT / HAPUS)</h3>
+                <button onclick="sch2ItemFormOpen()" class="px-3 py-1.5 rounded bg-lime-900 hover:bg-lime-800 border border-lime-500/60 text-lime-200 font-bold text-[10px] transition"><i class="fa-solid fa-plus"></i> TAMBAH ITEM PEKERJAAN</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-[10.5px] font-mono border-collapse">
+                    <thead><tr class="text-slate-400 border-b border-slate-800">
+                        <th class="py-1.5 px-1 text-left">NO</th><th class="text-left">ITEM PEKERJAAN</th><th class="text-center">BOBOT %</th><th class="text-center">MULAI</th><th class="text-center">SELESAI</th><th class="text-center">PROGRESS</th><th class="text-center">STATUS</th><th class="text-center">AKSI</th>
+                    </tr></thead>
+                    <tbody id="sch2ItemsBody"></tbody>
+                </table>
+            </div>
+            <p class="text-[9px] text-slate-500 mt-2 font-mono">Tanggal & durasi tiap item tersinkronisasi otomatis dengan pengaturan mulai–selesai program (bisa melampaui rentang program = ditandai ⚠).</p>
+        </div>
+
+        <!-- REALISASI -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-lime-300 mb-3 font-mono flex items-center gap-2"><i class="fa-solid fa-thumbtack"></i> INPUT REALISASI KUMULATIF PROGRAM (VALIDASI MUNDUR DITOLAK)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 font-mono text-[11px]">
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">TANGGAL REALISASI</label><input id="sch2RealDate" type="date" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">PROGRES KUMULATIF (%)</label><input id="sch2RealPct" type="number" min="0" max="100" step="0.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400" placeholder="mis. 12.5"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">KETERANGAN</label><input id="sch2RealKet" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-lime-400" placeholder="mis. Uji DCPT sektor utara berjalan"></div>
+                <div class="flex items-end"><button onclick="sch2AddReal()" class="w-full px-3 py-2 rounded-lg bg-cyan-800 hover:bg-cyan-700 border border-cyan-400/60 text-white font-bold text-[11px] transition"><i class="fa-solid fa-plus"></i> CATAT REALISASI</button></div>
+            </div>
+            <div class="overflow-x-auto mt-3">
+                <table class="w-full text-[10.5px] font-mono border-collapse">
+                    <thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-1.5 text-left">TANGGAL</th><th class="text-center">AKTUAL KUM (%)</th><th class="text-center">RENCANA (%)</th><th class="text-center">DEVIASI</th><th class="text-left">KETERANGAN</th><th class="text-center">AKSI</th></tr></thead>
+                    <tbody id="sch2RealBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- KURVA S -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-lime-300 mb-3 font-mono flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> KURVA S — RENCANA vs AKTUAL vs PROYEKSI</h3>
+            <div class="h-64 sm:h-72"><canvas id="sch2Curve"></canvas></div>
+            <p class="text-[9px] text-slate-500 mt-2 font-mono">Rencana (garis putus cyan) dibangun otomatis dari tanggal mulai–selesai pengaturan; aktual (area hijau) dari input realisasi; proyeksi (amber) estimasi laju menuju 100% (ETA).</p>
+        </div>
+
+        <!-- ANALISIS -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-amber-300 mb-2 font-mono flex items-center gap-2"><i class="fa-solid fa-microscope"></i> ANALISIS & REKOMENDASI OTOMATIS (SINKRON DATA CUACA)</h3>
+            <div id="sch2Analysis" class="text-[11px] leading-relaxed text-slate-300 space-y-1.5 font-mono"></div>
+        </div>
+        <p class="text-center text-[9px] text-slate-500 font-mono">DCPKit PRO V2.7 • Tab 08 Jadwal Pekerjaan Umum • Ir. Mohamad Hartadi • Banyuwangi Site Supervision Suite</p>
+    </section>
+
+    <!-- ==================== TAB 09: MONITORING CUACA ==================== -->
+    <section id="tabWx" class="tab-pane hidden space-y-4">
+        <div class="cmd-card p-3 flex flex-wrap justify-between items-center gap-2 no-print font-mono text-xs">
+            <span class="text-slate-300 font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-cloud-sun-rain text-sky-400"></i> 09. MONITORING CUACA LOKASI PEKERJAAN — PETA WINDY + PENCATATAN CUACA HARIAN + LAPORAN HARIAN & BULANAN
+            </span>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-sky-950 border border-sky-500/60 text-sky-300 font-bold text-[10px]">TAPAK: -8.5985, 114.0375</span>
+                <button onclick="wxExportDailyPDF()" class="px-2.5 py-1 rounded bg-rose-950 hover:bg-rose-900 border border-rose-500/60 text-rose-300 font-bold text-[10px] transition"><i class="fa-solid fa-file-pdf"></i> PDF HARIAN</button>
+                <button onclick="wxExportMonthlyPDF()" class="px-2.5 py-1 rounded bg-rose-950 hover:bg-rose-900 border border-rose-500/60 text-rose-300 font-bold text-[10px] transition"><i class="fa-solid fa-file-pdf"></i> PDF BULANAN</button>
+            </div>
+        </div>
+
+        <!-- PETA WINDY -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-sky-300 mb-2 font-mono flex items-center gap-2"><i class="fa-solid fa-earth-asia"></i> PETA PREDIKSI CUACA PROFESIONAL — WINDY.COM (8 OVERLAY)</h3>
+            <div class="flex flex-wrap items-center gap-1.5 mb-2.5"><div class="flex flex-wrap gap-1.5" id="wxOverlayBtns"></div>
+                <button onclick="wxToggleFullscreen()" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 hover:text-white text-[10px] font-bold transition" title="Layar Penuh Peta"><i class="fa-solid fa-expand"></i></button></div>
+            <iframe id="wxWindyFrame" style="width:100%; height:420px; border:1px solid rgba(56,189,248,0.4); border-radius:10px;" src="" allowfullscreen></iframe>
+            <p class="text-[9px] text-slate-500 mt-2 font-mono">Sumber visual: embed.windy.com (radar, satelit, angin, hujan, gelombang, suhu, awan, embusan). Zoom awal 10 — tapak Gunung Tumpang Pitu, Pad C TSF Banyuwangi.</p>
+        </div>
+
+        <!-- KARTU CUACA TERKINI SITE (ala GeoTestKit) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 font-mono">
+            <div class="cmd-card p-3 border-l-4 border-l-amber-500"><div class="text-[9px] font-bold text-slate-400 uppercase">Kondisi &amp; Suhu Terkini Site</div><div id="wxLiveCond" class="text-base font-black text-amber-400 font-tech mt-1">—</div><div class="text-[9px] text-amber-300" id="wxLiveCondSub">dari log terakhir</div></div>
+            <div class="cmd-card p-3 border-l-4 border-l-cyan-500"><div class="text-[9px] font-bold text-slate-400 uppercase">Akumulasi Hujan 24 Jam</div><div id="wxLiveRain" class="text-base font-black text-cyan-400 font-tech mt-1">— mm</div><div class="text-[9px] text-cyan-300" id="wxLiveRainSub">catatan tanggal terakhir</div></div>
+            <div class="cmd-card p-3 border-l-4 border-l-purple-500"><div class="text-[9px] font-bold text-slate-400 uppercase">Angin Maks</div><div id="wxLiveWind" class="text-base font-black text-purple-300 font-tech mt-1">— km/j</div><div class="text-[9px] text-purple-300" id="wxLiveWindSub">arah &amp; kecepatan tercatat</div></div>
+            <div class="cmd-card p-3 border-l-4 border-l-emerald-500"><div class="text-[9px] font-bold text-slate-400 uppercase">Status Operasional Timbunan</div><div id="wxLiveStatus" class="text-base font-black text-emerald-400 font-tech mt-1">—</div><div class="text-[9px] text-emerald-300" id="wxLiveStatusSub">—</div></div>
+        </div>
+
+        <!-- KPI -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Total Hari Tercatat</div><div id="wxKpiTotal" class="text-lg font-black text-sky-400 font-tech mt-1">0</div><div class="text-[9px] text-slate-500 font-mono">seluruh log cuaca</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Hari Hujan Bulan Ini</div><div id="wxKpiRain" class="text-lg font-black text-cyan-400 font-tech mt-1">0</div><div class="text-[9px] text-slate-500 font-mono">dari catatan harian</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Curah Hujan Bulan Ini</div><div id="wxKpiMm" class="text-lg font-black text-emerald-400 font-tech mt-1">0 mm</div><div class="text-[9px] text-slate-500 font-mono">akumulasi mm</div></div>
+            <div class="cmd-card p-3"><div class="text-[9px] font-mono font-bold text-slate-400 uppercase">Suhu Rata-rata</div><div id="wxKpiTemp" class="text-lg font-black text-amber-400 font-tech mt-1">—</div><div class="text-[9px] text-slate-500 font-mono">bulan ini (°C)</div></div>
+        </div>
+
+        <!-- FORM CATAT CUACA -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-sky-300 mb-3 font-mono flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> PENCATATAN CUACA HARIAN LOKASI PEKERJAAN</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-2 font-mono text-[11px]">
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">TANGGAL</label><input id="wxDate" type="date" class="w-full bg-slate-950 border border-sky-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">KONDISI CUACA</label>
+                    <select id="wxCond" onchange="wxCondAutoFill()" class="w-full bg-slate-950 border border-sky-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400">
+                        <option>Cerah</option><option>Cerah Berawan</option><option>Berawan</option><option>Hujan Ringan</option><option>Hujan Sedang</option><option>Hujan Lebat</option><option>Ribut / Badai</option>
+                    </select></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">SUHU MIN (°C)</label><input id="wxTmin" type="number" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="24.0"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">SUHU MAKS (°C)</label><input id="wxTmax" type="number" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="32.0"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">ANGIN (km/jam)</label><input id="wxWind" type="number" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="12"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">ARAH ANGIN</label>
+                    <select id="wxWdir" class="w-full bg-slate-950 border border-sky-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400">
+                        <option>Utara</option><option>Timur Laut</option><option>Timur</option><option>Tenggara</option><option>Selatan</option><option>Barat Daya</option><option>Barat</option><option>Barat Laut</option>
+                    </select></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">RH (%)</label><input id="wxRh" type="number" min="0" max="100" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="75"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">CURAH HUJAN (mm)</label><input id="wxRain" type="number" min="0" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="0"></div>
+                <div class="md:col-span-2"><label class="text-slate-400 text-[10px] font-bold block mb-1">KETERANGAN / PETUGAS</label><input id="wxKet" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="mis. Pengujian tetap berjalan — Arif Budi S"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">SHIFT</label>
+                    <select id="wxShift" class="w-full bg-slate-950 border border-sky-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400">
+                        <option>Pagi</option><option>Siang</option><option>Sore</option><option>Malam</option>
+                    </select></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">LOST TIME HUJAN (jam)</label><input id="wxLost" type="number" min="0" max="10" step="0.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="auto"></div>
+                <div><label class="text-slate-400 text-[10px] font-bold block mb-1">JAM KERJA EFEKTIF</label><input id="wxEff" type="number" min="0" max="10" step="0.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400" placeholder="auto"></div>
+                <div class="md:col-span-2"><label class="text-slate-400 text-[10px] font-bold block mb-1">DAMPAK OPERASIONAL (LOST TIME RAIN DELAY)</label>
+                    <select id="wxImpact" class="w-full bg-slate-950 border border-sky-800/60 rounded-lg p-2 text-white text-[11px] outline-none focus:border-sky-400">
+                        <option>Normal Operasional</option><option>Standby Sebagian Unit</option><option>Stop Zona 1 (Lempung) — Alihkan ke Zona 4 Batu</option><option>Stop Hauling (Jalan Licin)</option>
+                    </select></div>
+                <div class="flex items-end col-span-2 md:col-span-1"><button onclick="wxAdd()" class="w-full px-3 py-2 rounded-lg bg-sky-800 hover:bg-sky-700 border border-sky-400/60 text-white font-bold text-[11px] transition"><i class="fa-solid fa-floppy-disk"></i> SIMPAN CUACA</button></div>
+            </div>
+            <div class="overflow-x-auto mt-3">
+                <table class="w-full text-[10.5px] font-mono border-collapse">
+                    <thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-1.5 text-left">TANGGAL</th><th class="text-left">KONDISI</th><th class="text-center">MIN–MAKS (°C)</th><th class="text-center">ANGIN (km/j)</th><th class="text-center">ARAH</th><th class="text-center">RH (%)</th><th class="text-center">HUJAN (mm)</th><th class="text-center">LOST TIME</th><th class="text-left">KETERANGAN</th><th class="text-center">AKSI</th></tr></thead>
+                    <tbody id="wxLogBody"></tbody>
+                </table>
+            </div>
+            <p class="text-[9px] text-slate-500 mt-2 font-mono">Catatan tanggal sama akan menimpa entri lama (update). Log tersimpan di perangkat (localStorage dcpkit_weather_v1) dan otomatis masuk ke Laporan Harian & Rekap Bulanan.</p>
+        </div>
+
+        <!-- REKAP BULANAN (SINKRON JADWAL) -->
+        <div class="cmd-card p-4 sm:p-5">
+            <h3 class="text-xs font-bold text-amber-300 mb-2 font-mono flex items-center gap-2"><i class="fa-solid fa-table-list"></i> REKAP BULANAN CUACA — TERSINKRONISASI JADWAL & LAPORAN</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-[10.5px] font-mono border-collapse">
+                    <thead><tr class="text-slate-400 border-b border-slate-800"><th class="py-1.5 text-left">BULAN</th><th class="text-center">HARI DICATAT</th><th class="text-center">HARI HUJAN</th><th class="text-center">CURAH TOTAL (mm)</th><th class="text-center">SUHU RATA² (°C)</th><th class="text-center">ANGIN MAKS (km/j)</th><th class="text-center">LOST TIME (jam)</th><th class="text-center">EFEKTIVITAS (%)</th><th class="text-left">KONDISI DOMINAN</th><th class="text-center">PROGRES JADWAL s.d. AKHIR BULAN</th></tr></thead>
+                    <tbody id="wxMonthlyBody"></tbody>
+                </table>
+            </div>
+            <p class="text-[9px] text-slate-500 mt-2 font-mono">Baris bulan mengikuti rentang pengaturan jadwal Tab 08 (Mulai Sep 2026 – Selesai Feb 2027, editable). Kolom terakhir sinkron otomatis dengan realisasi jadwal: hari hujan tinggi = dasar justifikasi keterlambatan (claim day).</p>
+        </div>
+        <p class="text-center text-[9px] text-slate-500 font-mono">DCPKit PRO V2.7 • Tab 09 Monitoring Cuaca (Windy + Log Harian + Lost Time Rain Delay + Rekap Bulanan) • Ir. Mohamad Hartadi • Banyuwangi Site Supervision Suite</p>
     </section>
 
 
@@ -2626,7 +2820,7 @@
         // CADANGKAN & IMPOR BERKAS JSON
         function downloadProjectJson() {
             const data = {
-                app: "DCPKit PRO V2.2",
+                app: "DCPKit PRO V2.7",
                 exportedAt: new Date().toISOString(),
                 jobName: document.getElementById('jobName').value,
                 jobLoc: document.getElementById('jobLoc').value,
@@ -7213,6 +7407,16 @@
                 if (b) b.classList.add('active');
                 if (typeof freqRenderAnalysis === 'function') freqRenderAnalysis();
             }
+            if (id === 'tabSch2') {
+                const b = document.getElementById('btnTabSch2');
+                if (b) b.classList.add('active');
+                setTimeout(() => { initSch2Module(); }, 120);
+            }
+            if (id === 'tabWx') {
+                const b = document.getElementById('btnTabWx');
+                if (b) b.classList.add('active');
+                setTimeout(() => { initWxModule(); }, 120);
+            }
         }
 
         function updateReportPreview() {
@@ -7851,6 +8055,564 @@
             XLSX.writeFile(wb, 'Schedule_Closure_Filling_PadC_DAM6.xlsx');
         }
 
+        
+        // ============================================================
+        // DCPKit PRO V2.6 — MODUL TAB 08: JADWAL PEKERJAAN UMUM (ala GeoTestKit)
+        // ============================================================
+        const SCH2_KEY = 'dcpkit_sched_umum_v1';
+        const SCH2_DEFAULT = {
+            settings: { name: 'Program Pengawasan Geoteknik Pad C Ext. Dam 6 TSF Banyuwangi', start: '2026-09-01', end: '2027-02-28' },
+            items: [
+                { id: 'it1', nama: 'Mobilisasi & Persiapan Alat DCP', bobot: 5,  start: '2026-09-01', end: '2026-09-15',  prog: 0 },
+                { id: 'it2', nama: 'Pengujian DCPT Lapisan Dacite', bobot: 15, start: '2026-09-16', end: '2026-10-31',  prog: 0 },
+                { id: 'it3', nama: 'Uji Frekuensi Timbunan Zona 1-3 (Halus/Filter/Transisi)', bobot: 15, start: '2026-11-01', end: '2026-12-15', prog: 0 },
+                { id: 'it4', nama: 'Uji Frekuensi Timbunan Zona 4-5 (Random Rip-rap)', bobot: 15, start: '2026-12-01', end: '2027-01-15', prog: 0 },
+                { id: 'it5', nama: 'Uji Frekuensi Timbunan Zona 6-8 (Basal Drain-Perkerasan)', bobot: 10, start: '2026-12-15', end: '2027-01-31', prog: 0 },
+                { id: 'it6', nama: 'Schedule Closure Filling Timbunan (Tab 06)', bobot: 20, start: '2026-10-01', end: '2027-02-10', prog: 0 },
+                { id: 'it7', nama: 'Pengujian Laboratorium & Verifikasi Hasil', bobot: 10, start: '2027-01-05', end: '2027-02-15', prog: 0 },
+                { id: 'it8', nama: 'Pelaporan Bulanan & Dokumentasi Akhir', bobot: 10, start: '2026-09-28', end: '2027-02-28', prog: 0 }
+            ],
+            real: []
+        };
+        let sch2Data = null, sch2Chart = null, sch2EditingItemId = null;
+
+        function sch2Load() {
+            try { sch2Data = JSON.parse(localStorage.getItem(SCH2_KEY)) || null; } catch (e) { sch2Data = null; }
+            if (!sch2Data || !sch2Data.settings) sch2Data = JSON.parse(JSON.stringify(SCH2_DEFAULT));
+            return sch2Data;
+        }
+        function sch2Save() { localStorage.setItem(SCH2_KEY, JSON.stringify(sch2Data)); }
+        function sch2Days(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+        function sch2PlanPct(dateStr) {
+            const st = sch2Data.settings;
+            const total = Math.max(1, sch2Days(st.start, st.end));
+            const d = sch2Days(st.start, dateStr);
+            return Math.max(0, Math.min(100, (d / total) * 100));
+        }
+        function sch2ProgAktual() {
+            const its = sch2Data.items;
+            if (!its.length) return 0;
+            return its.reduce((a, i) => a + (i.prog / 100) * i.bobot, 0);
+        }
+        function sch2SaveSettings() {
+            const name = (document.getElementById('sch2Name').value || '').trim() || SCH2_DEFAULT.settings.name;
+            const start = document.getElementById('sch2Start').value;
+            const end = document.getElementById('sch2End').value;
+            if (!start || !end) { alert('Tanggal mulai dan selesai wajib diisi.'); return; }
+            if (new Date(end) <= new Date(start)) { alert('Tanggal selesai TIDAK BOLEH mundur / sama dengan tanggal mulai. Koreksi tanggal.'); return; }
+            sch2Data.settings = { name, start, end };
+            sch2Save(); sch2RenderAll();
+            if (typeof wxRenderAll === 'function') wxRenderAll(); // sinkronisasi rekap bulanan cuaca
+            alert('Pengaturan jadwal tersimpan & tersinkronisasi (durasi, KPI, kurva S, item, rekap cuaca).');
+        }
+        function sch2ItemFormOpen(id) {
+            sch2EditingItemId = id || null;
+            const it = id ? sch2Data.items.find(x => x.id === id) : null;
+            const nama = prompt('Nama item pekerjaan:', it ? it.nama : '');
+            if (nama === null) return;
+            const bobot = parseFloat(prompt('Bobot (%):', it ? it.bobot : 10));
+            if (isNaN(bobot) || bobot < 0 || bobot > 100) { alert('Bobot harus angka 0-100.'); return; }
+            const st = sch2Data.settings;
+            const start = prompt('Tanggal mulai item (YYYY-MM-DD):', it ? it.start : st.start) || st.start;
+            const end = prompt('Tanggal selesai item (YYYY-MM-DD):', it ? it.end : st.end) || st.end;
+            if (new Date(end) <= new Date(start)) { alert('Tanggal selesai item tidak boleh mundur.'); return; }
+            const prog = parseFloat(prompt('Progress saat ini (%):', it ? it.prog : 0));
+            if (isNaN(prog) || prog < 0 || prog > 100) { alert('Progress harus angka 0-100.'); return; }
+            const rec = { id: it ? it.id : 'it' + Date.now(), nama: nama.trim() || 'Item baru', bobot, start, end, prog };
+            if (it) { sch2Data.items = sch2Data.items.map(x => x.id === it.id ? rec : x); }
+            else { sch2Data.items.push(rec); }
+            sch2Save(); sch2RenderAll();
+        }
+        function sch2DelItem(id) {
+            if (!confirm('Hapus item pekerjaan ini?')) return;
+            sch2Data.items = sch2Data.items.filter(x => x.id !== id);
+            sch2Save(); sch2RenderAll();
+        }
+        function sch2AddReal() {
+            const date = document.getElementById('sch2RealDate').value;
+            const pct = parseFloat(document.getElementById('sch2RealPct').value);
+            const ket = document.getElementById('sch2RealKet').value;
+            if (!date) { alert('Tanggal realisasi wajib diisi.'); return; }
+            if (isNaN(pct) || pct < 0 || pct > 100) { alert('Progress kumulatif harus angka 0-100.'); return; }
+            const sorted = sch2Data.real.slice().sort((a, b) => a.date.localeCompare(b.date));
+            const last = sorted[sorted.length - 1];
+            if (last && pct < last.pct) { alert('Validasi: progress kumulatif TIDAK BOLEH MUNDUR (terakhir: ' + last.pct + '% pada ' + last.date + ').'); return; }
+            const st = sch2Data.settings;
+            if (new Date(date) < new Date(st.start) || new Date(date) > new Date(st.end)) { alert('Tanggal realisasi di luar rentang program (' + st.start + ' s.d. ' + st.end + ').'); return; }
+            const ex = sch2Data.real.find(e => e.date === date);
+            if (ex) { ex.pct = pct; ex.ket = ket; } else { sch2Data.real.push({ date, pct, ket }); }
+            sch2Save(); sch2RenderAll();
+            document.getElementById('sch2RealPct').value = ''; document.getElementById('sch2RealKet').value = '';
+        }
+        function sch2DelReal(date) {
+            if (!confirm('Hapus entri realisasi ' + date + '?')) return;
+            sch2Data.real = sch2Data.real.filter(e => e.date !== date);
+            sch2Save(); sch2RenderAll();
+        }
+        function sch2EtaText() {
+            const sorted = sch2Data.real.slice().sort((a, b) => a.date.localeCompare(b.date));
+            if (sorted.length < 2) return { eta: '—', laju: 0 };
+            const first = sorted[0], last = sorted[sorted.length - 1];
+            const dDays = Math.max(1, sch2Days(first.date, last.date));
+            const laju = (last.pct - first.pct) / dDays;
+            if (laju <= 0) return { eta: 'TIDAK DAPAT DIESTIMASI', laju: 0 };
+            const remainDays = Math.ceil((100 - last.pct) / laju);
+            const etaDate = new Date(new Date(last.date).getTime() + remainDays * 86400000);
+            return { eta: etaDate.toISOString().slice(0, 10), laju };
+        }
+        function sch2RenderAll() {
+            const st = sch2Data.settings;
+            const today = new Date().toISOString().slice(0, 10);
+            const dur = sch2Days(st.start, st.end);
+            let run = sch2Days(st.start, today); if (run < 0) run = 0; if (run > dur) run = dur;
+            const left = dur - run;
+            const timePct = dur > 0 ? (run / dur) * 100 : 0;
+            const prog = sch2ProgAktual();
+            const dev = prog - timePct;
+            const status = dev >= 2 ? 'DI DEPAN ✅' : dev <= -2 ? 'TERTINGGAL ⚠' : 'SESUAI RENCANA';
+            const devColor = dev >= 0 ? 'text-emerald-400' : 'text-rose-400';
+            document.getElementById('sch2KpiDur').textContent = dur + ' hr';
+            document.getElementById('sch2KpiRun').textContent = run + ' hr';
+            document.getElementById('sch2KpiLeft').textContent = left + ' hr';
+            document.getElementById('sch2KpiTime').textContent = timePct.toFixed(1) + '%';
+            document.getElementById('sch2KpiProg').textContent = prog.toFixed(1) + '%';
+            const el = document.getElementById('sch2KpiDev');
+            el.textContent = (dev >= 0 ? '+' : '') + dev.toFixed(1) + '%';
+            el.className = 'text-lg font-black font-tech mt-1 ' + devColor;
+            document.getElementById('sch2KpiStatus').textContent = status;
+
+            // Tabel item
+            const body = document.getElementById('sch2ItemsBody');
+            body.innerHTML = sch2Data.items.map((it, i) => {
+                const out = new Date(it.end) > new Date(st.end) || new Date(it.start) < new Date(st.start);
+                const stt = it.prog >= 100 ? '<span class="text-emerald-400">SELESAI</span>' : it.prog > 0 ? '<span class="text-amber-400">PROGRES</span>' : '<span class="text-slate-500">BELUM</span>';
+                return '<tr class="border-b border-slate-900">' +
+                    '<td class="py-1.5 px-1 text-slate-500">' + (i + 1) + '</td>' +
+                    '<td class="text-slate-200">' + it.nama + (out ? ' <span class="text-rose-400" title="Di luar rentang program">⚠</span>' : '') + '</td>' +
+                    '<td class="text-center text-cyan-300">' + it.bobot + '</td>' +
+                    '<td class="text-center text-slate-400">' + it.start + '</td>' +
+                    '<td class="text-center text-slate-400">' + it.end + '</td>' +
+                    '<td class="text-center"><div class="flex items-center gap-1.5"><div class="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="h-full ' + (it.prog >= 100 ? 'bg-emerald-400' : it.prog > 0 ? 'bg-amber-400' : 'bg-slate-600') + '" style="width:' + it.prog + '%"></div></div><span class="' + (it.prog >= 100 ? 'text-emerald-400' : 'text-slate-300') + '">' + it.prog + '%</span></div></td>' +
+                    '<td class="text-center">' + stt + '</td>' +
+                    '<td class="text-center whitespace-nowrap"><button onclick="sch2ItemFormOpen(\'' + it.id + '\')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-lime-800 text-[9px] font-bold">EDIT</button> <button onclick="sch2DelItem(\'' + it.id + '\')" class="px-1.5 py-0.5 rounded bg-rose-950 hover:bg-rose-800 text-rose-300 text-[9px] font-bold">DEL</button></td></tr>';
+            }).join('') || '<tr><td colspan="8" class="text-center text-slate-500 py-3">Belum ada item pekerjaan — klik TAMBAH ITEM PEKERJAAN.</td></tr>';
+
+            // Tabel realisasi
+            const rb = document.getElementById('sch2RealBody');
+            const rSorted = sch2Data.real.slice().sort((a, b) => b.date.localeCompare(a.date));
+            rb.innerHTML = rSorted.map(e => {
+                const plan = sch2PlanPct(e.date); const d = e.pct - plan;
+                return '<tr class="border-b border-slate-900"><td class="py-1.5 text-slate-200">' + e.date + '</td>' +
+                    '<td class="text-center text-emerald-400 font-bold">' + e.pct + '%</td>' +
+                    '<td class="text-center text-cyan-300">' + plan.toFixed(1) + '%</td>' +
+                    '<td class="text-center ' + (d >= 0 ? 'text-emerald-400' : 'text-rose-400') + '">' + (d >= 0 ? '+' : '') + d.toFixed(1) + '</td>' +
+                    '<td class="text-slate-400">' + (e.ket || '-') + '</td>' +
+                    '<td class="text-center"><button onclick="sch2DelReal(\'' + e.date + '\')" class="px-1.5 py-0.5 rounded bg-rose-950 hover:bg-rose-800 text-rose-300 text-[9px] font-bold">DEL</button></td></tr>';
+            }).join('') || '<tr><td colspan="6" class="text-center text-slate-500 py-3">Belum ada realisasi.</td></tr>';
+
+            sch2DrawCurve(); sch2RenderAnalysis();
+            document.getElementById('sch2SetInfo').textContent = 'Program: ' + st.name + ' • Rentang: ' + st.start + ' s.d. ' + st.end + ' (' + dur + ' hari ≈ ' + (dur / 30.44).toFixed(1) + ' bulan) • Semua perhitungan, kurva S, item, dan rekap cuaca mengikuti rentang ini.';
+        }
+        function sch2DrawCurve() {
+            if (typeof Chart === 'undefined') return;
+            const st = sch2Data.settings;
+            const total = Math.max(1, sch2Days(st.start, st.end));
+            const steps = 16;
+            const planLabels = [], planMap = {};
+            for (let i = 0; i <= steps; i++) {
+                const d = new Date(new Date(st.start).getTime() + Math.round(total * i / steps) * 86400000);
+                const ds = d.toISOString().slice(0, 10);
+                planLabels.push(ds);
+            }
+            const rSorted = sch2Data.real.slice().sort((a, b) => a.date.localeCompare(b.date));
+            const actualMap = {}; rSorted.forEach(e => { actualMap[e.date] = e.pct; });
+            const projMap = {};
+            let projEnd = null;
+            if (rSorted.length >= 2) {
+                const laju = sch2EtaText().laju;
+                const last = rSorted[rSorted.length - 1];
+                if (laju > 0) {
+                    const rem = Math.ceil((100 - last.pct) / laju);
+                    projEnd = new Date(new Date(last.date).getTime() + rem * 86400000).toISOString().slice(0, 10);
+                    projMap[last.date] = last.pct; projMap[projEnd] = 100;
+                }
+            }
+            // Sumbu gabungan: semua tanggal unik terurut
+            const allDates = Array.from(new Set(planLabels.concat(Object.keys(actualMap), Object.keys(projMap)))).sort();
+            const planData = allDates.map(ds => {
+                const d = sch2Days(st.start, ds);
+                return +Math.max(0, Math.min(100, (d / total) * 100)).toFixed(1);
+            });
+            const actualData = allDates.map(ds => (ds in actualMap) ? actualMap[ds] : null);
+            const projData = allDates.map(ds => (ds in projMap) ? projMap[ds] : null);
+            const ctx = document.getElementById('sch2Curve');
+            if (sch2Chart) { sch2Chart.destroy(); sch2Chart = null; }
+            sch2Chart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: allDates, datasets: [
+                    { label: 'Rencana', data: planData, borderColor: '#22d3ee', borderDash: [6, 4], borderWidth: 2, pointRadius: 0, tension: 0.2 },
+                    { label: 'Aktual', data: actualData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.15)', fill: true, borderWidth: 2.5, tension: 0.3, pointRadius: 3, spanGaps: false },
+                    { label: 'Proyeksi (ETA)', data: projData, borderColor: '#f59e0b', borderDash: [3, 3], borderWidth: 2, pointRadius: 0, tension: 0, spanGaps: false }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+                    scales: { x: { ticks: { color: '#64748b', font: { size: 8 }, maxTicksLimit: 10, maxRotation: 0, autoSkip: true }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                              y: { min: 0, max: 100, ticks: { color: '#64748b', font: { size: 9 }, callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+            });
+        }
+        function sch2RenderAnalysis() {
+            const st = sch2Data.settings;
+            const prog = sch2ProgAktual();
+            const today = new Date().toISOString().slice(0, 10);
+            const timePct = Math.max(0, Math.min(100, (sch2Days(st.start, today) / Math.max(1, sch2Days(st.start, st.end))) * 100));
+            const dev = prog - timePct;
+            const eta = sch2EtaText();
+            const wx = (typeof wxLoad === 'function' && localStorage.getItem('dcpkit_weather_v1')) ? JSON.parse(localStorage.getItem('dcpkit_weather_v1')) : null;
+            const wxLog = wx && wx.log ? wx.log : [];
+            const rainDays = wxLog.filter(e => e.rain > 0 || e.cond.includes('Hujan')).length;
+            const ymNow = new Date().toISOString().slice(0, 7);
+            const lostM = wxLog.filter(e => e.date.slice(0, 7) === ymNow).reduce((a, e) => a + (e.lostHours || 0), 0);
+            const badge = dev >= 2 ? '<span class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 font-bold">DI DEPAN JADWAL</span>'
+                        : dev <= -2 ? '<span class="px-2 py-0.5 rounded bg-rose-950 border border-rose-500 text-rose-300 font-bold">TERTINGGAL JADWAL</span>'
+                        : '<span class="px-2 py-0.5 rounded bg-amber-950 border border-amber-500 text-amber-300 font-bold">SESUAI JADWAL</span>';
+            const done = sch2Data.items.filter(i => i.prog >= 100).length;
+            const run = sch2Data.items.filter(i => i.prog > 0 && i.prog < 100).length;
+            const etaLate = eta.eta !== '—' && eta.eta !== 'TIDAK DAPAT DIESTIMASI' && new Date(eta.eta) > new Date(st.end);
+            document.getElementById('sch2Analysis').innerHTML =
+                '<div class="flex flex-wrap items-center gap-2 mb-1">' + badge +
+                '<span class="text-[10px] text-slate-400 font-mono">Progress aktual ' + prog.toFixed(1) + '% vs rencana waktu ' + timePct.toFixed(1) + '% • Item selesai ' + done + '/' + sch2Data.items.length + ' • Berjalan ' + run + '</span></div>' +
+                '<p class="text-slate-300">Estimasi selesai 100% (ETA) dari laju realisasi: <b class="' + (etaLate ? 'text-rose-400' : 'text-emerald-400') + '">' + eta.eta + '</b>' + (eta.laju > 0 ? ' (laju ≈ ' + eta.laju.toFixed(2) + '%/hari)' : ' — catat minimal 2 realisasi untuk menghitung laju') + (etaLate ? ' <b class="text-rose-400">MELEBIHI target ' + st.end + '</b>' : '') + '</p>' +
+                '<p class="text-slate-300">Dampak cuaca (sinkron Tab 09): <b class="text-cyan-300">' + rainDays + ' hari hujan</b> tercatat dalam log cuaca' + (rainDays > 20 ? ' — pertimbangkan justifikasi claim day keterlambatan (claim day).' : ' — masih dalam batas wajar untuk perencanaan cuaca.') + ' • Lost time rain delay bulan berjalan: <b class="text-rose-300">' + lostM.toFixed(1) + ' jam</b>' + '</p>' +
+                '<p class="text-slate-400">' + (dev < 0 ? 'Rekomendasi: prioritaskan item berbobot besar yang belum berjalan; evaluasi tambah shift pada periode tanpa hujan.' : 'Rekomendasi: pertahankan laju; pantau item berjalan agar selesai sesuai tanggal selesai item.') + '</p>';
+        }
+        function sch2ExportPDF() {
+            if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) { alert('Pustaka PDF belum siap. Periksa koneksi internet lalu muat ulang halaman.'); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            const st = sch2Data.settings;
+            doc.setFontSize(13); doc.setFont('helvetica', 'bold');
+            doc.text('LAPORAN JADWAL PEKERJAAN — ' + st.name, 14, 16);
+            doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+            doc.text('Pad C Ext. Dam 6 TSF Banyuwangi • Periode: ' + st.start + ' s.d. ' + st.end + ' • Dicetak: ' + new Date().toLocaleString('id-ID'), 14, 22);
+            doc.autoTable({ startY: 26, head: [['KPI', 'Nilai']], body: [
+                ['Durasi', sch2Days(st.start, st.end) + ' hari'],
+                ['Progress aktual (bobot)', sch2ProgAktual().toFixed(1) + '%'],
+                ['Deviasi', document.getElementById('sch2KpiDev').textContent],
+                ['Status', document.getElementById('sch2KpiStatus').textContent],
+                ['ETA', sch2EtaText().eta]
+            ], theme: 'grid', headStyles: { fillColor: [17, 24, 39] }, styles: { fontSize: 8 } });
+            doc.autoTable({ startY: doc.lastAutoTable.finalY + 5, head: [['No', 'Item Pekerjaan', 'Bobot %', 'Mulai', 'Selesai', 'Progress %', 'Status']],
+                body: sch2Data.items.map((it, i) => [i + 1, it.nama, it.bobot, it.start, it.end, it.prog, it.prog >= 100 ? 'SELESAI' : it.prog > 0 ? 'PROGRES' : 'BELUM']),
+                theme: 'grid', headStyles: { fillColor: [17, 24, 39] }, styles: { fontSize: 7.5 } });
+            doc.autoTable({ startY: doc.lastAutoTable.finalY + 5, head: [['Tanggal', 'Aktual Kum (%)', 'Rencana (%)', 'Deviasi', 'Keterangan']],
+                body: sch2Data.real.slice().sort((a, b) => a.date.localeCompare(b.date)).map(e => [e.date, e.pct, +sch2PlanPct(e.date).toFixed(1), +(e.pct - sch2PlanPct(e.date)).toFixed(1), e.ket || '-']),
+                theme: 'grid', headStyles: { fillColor: [17, 24, 39] }, styles: { fontSize: 7.5 } });
+            doc.setFontSize(7.5);
+            doc.text('Dikembangkan oleh Ir. Mohamad Hartadi • DCPKit PRO V2.6 • Banyuwangi Site Supervision Suite', 148, 200, { align: 'center' });
+            doc.save('Jadwal_Pekerjaan_PadC_DAM6.pdf');
+        }
+        function sch2ExportExcel() {
+            if (typeof XLSX === 'undefined') { alert('Pustaka Excel belum siap.'); return; }
+            const st = sch2Data.settings;
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([
+                ['JADWAL PEKERJAAN — ' + st.name], [],
+                ['Tanggal mulai', st.start], ['Target selesai', st.end], ['Durasi (hari)', sch2Days(st.start, st.end)], ['Progress aktual %', +sch2ProgAktual().toFixed(1)]
+            ]), 'Pengaturan');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sch2Data.items.map(i => ({ Item: i.nama, 'Bobot %': i.bobot, Mulai: i.start, Selesai: i.end, 'Progress %': i.prog }))), 'Item Pekerjaan');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sch2Data.real.map(e => ({ Tanggal: e.date, 'Aktual Kum %': e.pct, 'Rencana %': +sch2PlanPct(e.date).toFixed(1), Keterangan: e.ket || '' }))), 'Realisasi');
+            XLSX.writeFile(wb, 'Jadwal_Pekerjaan_PadC_DAM6.xlsx');
+        }
+        function initSch2Module() {
+            sch2Load();
+            document.getElementById('sch2Name').value = sch2Data.settings.name;
+            document.getElementById('sch2Start').value = sch2Data.settings.start;
+            document.getElementById('sch2End').value = sch2Data.settings.end;
+            if (!document.getElementById('sch2RealDate').value) document.getElementById('sch2RealDate').value = new Date().toISOString().slice(0, 10);
+            sch2RenderAll();
+        }
+
+        // ============================================================
+        // DCPKit PRO V2.6 — MODUL TAB 09: MONITORING CUACA (WINDY + LOG HARIAN + REKAP)
+        // ============================================================
+        const WX_KEY = 'dcpkit_weather_v1';
+        const WX_SITE = { lat: -8.5985, lon: 114.0375, zoom: 10 };
+        const WX_OVERLAYS = [
+            ['radar', 'RADAR', 'fa-satellite-dish'], ['satellite', 'SATELIT', 'fa-satellite'], ['wind', 'ANGIN', 'fa-wind'],
+            ['rain', 'HUJAN', 'fa-cloud-rain'], ['waves', 'GELOMBANG', 'fa-water'], ['temp', 'SUHU', 'fa-temperature-half'],
+            ['clouds', 'AWAN', 'fa-cloud'], ['gust', 'EMBUSAN', 'fa-wind']
+        ];
+        let wxData = null, wxOverlay = 'radar';
+
+        function wxLoad() {
+            try { wxData = JSON.parse(localStorage.getItem(WX_KEY)) || null; } catch (e) { wxData = null; }
+            if (!wxData || !wxData.log) wxData = { log: [] };
+            // migrasi v2.6 -> v2.7 (lost time rain delay)
+            wxData.log.forEach(e => {
+                if (e.lostHours == null) e.lostHours = 0;
+                if (e.effHours == null) e.effHours = 10;
+                if (!e.shift) e.shift = 'Pagi';
+                if (!e.impact) e.impact = (e.rain || 0) >= 15 ? 'Stop Hauling (Jalan Licin)' : (wxIsRain(e) ? 'Stop Zona 1 (Lempung) — Alihkan ke Zona 4 Batu' : 'Normal Operasional');
+            });
+            return wxData;
+        }
+        const WX_LOST_MAP = { 'Cerah': [0, 10], 'Cerah Berawan': [0, 10], 'Berawan': [0, 10], 'Hujan Ringan': [1, 9], 'Hujan Sedang': [3, 7], 'Hujan Lebat': [5.5, 4.5], 'Ribut / Badai': [8, 2] };
+        function wxCondAutoFill() {
+            const c = document.getElementById('wxCond').value;
+            const m = WX_LOST_MAP[c];
+            if (m && document.getElementById('wxLost').value === '') document.getElementById('wxLost').value = m[0];
+            if (m && document.getElementById('wxEff').value === '') document.getElementById('wxEff').value = m[1];
+            const imp = document.getElementById('wxImpact');
+            if (imp) {
+                if (c === 'Hujan Lebat' || c === 'Ribut / Badai') imp.value = 'Stop Hauling (Jalan Licin)';
+                else if (c === 'Hujan Sedang') imp.value = 'Stop Zona 1 (Lempung) — Alihkan ke Zona 4 Batu';
+                else if (c === 'Hujan Ringan') imp.value = 'Standby Sebagian Unit';
+                else imp.value = 'Normal Operasional';
+            }
+        }
+        function wxToggleFullscreen() {
+            const f = document.getElementById('wxWindyFrame');
+            if (!f) return;
+            if (typeof f.requestFullscreen === 'function') {
+                if (document.fullscreenElement) document.exitFullscreen();
+                else f.requestFullscreen();
+            } else { alert('Layar penuh tidak didukung perangkat ini — gunakan browser Chrome/Edge/Firefox desktop.'); }
+        }
+        function wxSave() { localStorage.setItem(WX_KEY, JSON.stringify(wxData)); }
+        function wxBuildUrl(ov) {
+            return 'https://embed.windy.com/embed2.html?lat=' + WX_SITE.lat + '&lon=' + WX_SITE.lon +
+                '&detailLat=' + WX_SITE.lat + '&detailLon=' + WX_SITE.lon + '&zoom=' + WX_SITE.zoom +
+                '&level=surface&overlay=' + ov + '&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1';
+        }
+        function wxSetOverlay(ov) {
+            wxOverlay = ov;
+            document.getElementById('wxWindyFrame').src = wxBuildUrl(ov);
+            document.querySelectorAll('#wxOverlayBtns button').forEach(b => {
+                b.className = 'px-2 py-1 rounded text-[10px] font-bold border transition ' +
+                    (b.dataset.ov === ov ? 'bg-sky-700 border-sky-400 text-white' : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white');
+            });
+        }
+        function wxAdd() {
+            const date = document.getElementById('wxDate').value;
+            if (!date) { alert('Tanggal wajib diisi.'); return; }
+            const rec = {
+                date,
+                cond: document.getElementById('wxCond').value,
+                tmin: parseFloat(document.getElementById('wxTmin').value) || null,
+                tmax: parseFloat(document.getElementById('wxTmax').value) || null,
+                wind: parseFloat(document.getElementById('wxWind').value) || null,
+                wdir: document.getElementById('wxWdir').value,
+                rh: parseFloat(document.getElementById('wxRh').value) || null,
+                rain: parseFloat(document.getElementById('wxRain').value) || 0,
+                shift: document.getElementById('wxShift').value,
+                lostHours: parseFloat(document.getElementById('wxLost').value) || 0,
+                effHours: parseFloat(document.getElementById('wxEff').value) || 10,
+                impact: document.getElementById('wxImpact').value,
+                ket: document.getElementById('wxKet').value
+            };
+            const ex = wxData.log.find(e => e.date === rec.date);
+            if (ex) { Object.assign(ex, rec); } else { wxData.log.push(rec); }
+            wxSave(); wxRenderAll();
+            if (typeof sch2RenderAll === 'function') sch2RenderAll(); // sinkron analisis jadwal
+            document.getElementById('wxKet').value = '';
+            alert('Cuaca ' + date + ' tersimpan & tersinkron ke laporan harian/bulanan.');
+        }
+        function wxEdit(date) {
+            const e = wxData.log.find(x => x.date === date); if (!e) return;
+            document.getElementById('wxDate').value = e.date;
+            document.getElementById('wxCond').value = e.cond;
+            document.getElementById('wxTmin').value = e.tmin; document.getElementById('wxTmax').value = e.tmax;
+            document.getElementById('wxWind').value = e.wind; document.getElementById('wxWdir').value = e.wdir || 'Utara';
+            document.getElementById('wxRh').value = e.rh; document.getElementById('wxRain').value = e.rain;
+            document.getElementById('wxShift').value = e.shift || 'Pagi';
+            document.getElementById('wxLost').value = e.lostHours != null ? e.lostHours : 0;
+            document.getElementById('wxEff').value = e.effHours != null ? e.effHours : 10;
+            const imp = document.getElementById('wxImpact');
+            if (imp && e.impact) { for (const o of imp.options) if (o.value === e.impact) { imp.value = e.impact; break; } }
+            document.getElementById('wxKet').value = e.ket || '';
+        }
+        function wxDel(date) {
+            if (!confirm('Hapus catatan cuaca ' + date + '?')) return;
+            wxData.log = wxData.log.filter(e => e.date !== date);
+            wxSave(); wxRenderAll();
+            if (typeof sch2RenderAll === 'function') sch2RenderAll();
+        }
+        function wxIsRain(e) { return e.rain > 0 || e.cond.includes('Hujan') || e.cond.includes('Ribut'); }
+        function wxMonths() {
+            // Rentang bulan mengikuti pengaturan jadwal Tab 08 (fallback Sep 2026 - Feb 2027)
+            let st = { start: '2026-09-01', end: '2027-02-28' };
+            try {
+                const s = JSON.parse(localStorage.getItem(SCH2_KEY));
+                if (s && s.settings) st = s.settings;
+            } catch (e) {}
+            const out = [];
+            const d = new Date(st.start + 'T00:00:00'); const end = new Date(st.end + 'T00:00:00');
+            while (d <= end && out.length < 24) { out.push(d.toISOString().slice(0, 7)); d.setMonth(d.getMonth() + 1); }
+            return out;
+        }
+        function wxMonthProgress(ym) {
+            // Progres jadwal s.d. akhir bulan (dari realisasi Tab 08)
+            try {
+                const s = JSON.parse(localStorage.getItem(SCH2_KEY));
+                if (!s || !s.real) return '—';
+                const until = ym + '-31';
+                const ok = s.real.filter(e => e.date <= until).sort((a, b) => a.date.localeCompare(b.date));
+                if (!ok.length) return '—';
+                return ok[ok.length - 1].pct.toFixed(0) + '%';
+            } catch (e) { return '—'; }
+        }
+        function wxRenderAll() {
+            wxLoad();
+            const now = new Date();
+            const ymNow = now.toISOString().slice(0, 7);
+            const log = wxData.log.slice().sort((a, b) => b.date.localeCompare(a.date));
+            const monthLog = wxData.log.filter(e => e.date.slice(0, 7) === ymNow);
+            const rainM = monthLog.filter(wxIsRain);
+            const mmM = monthLog.reduce((a, e) => a + (e.rain || 0), 0);
+            const tAvg = monthLog.filter(e => e.tmax != null).map(e => (e.tmin + e.tmax) / 2);
+            // Kartu live (log terakhir)
+            const last = log[0];
+            const lc = document.getElementById('wxLiveCond');
+            if (lc) {
+                if (last) {
+                    lc.textContent = last.cond + (last.tmax != null ? ' • ' + Math.round(((last.tmin || 0) + last.tmax) / 2) + '°C' : '');
+                    document.getElementById('wxLiveCondSub').textContent = (last.shift || 'Pagi') + ' • ' + last.date + ' • RH ' + (last.rh != null ? last.rh + '%' : '-');
+                    document.getElementById('wxLiveRain').textContent = (last.rain || 0) + ' mm';
+                    document.getElementById('wxLiveRainSub').textContent = (last.rain || 0) > 15 ? 'Hujan lebat — waspadai jalan licin' : (last.rain || 0) > 0 ? 'Hujan ringan-sedang (aman hauling pelan)' : 'Kering — aman seluruh operasi';
+                    document.getElementById('wxLiveWind').textContent = (last.wind != null ? last.wind : '—') + ' km/j';
+                    document.getElementById('wxLiveWindSub').textContent = 'Arah ' + (last.wdir || '-') + (last.shift ? ' • shift ' + last.shift : '');
+                    const stop = (last.impact || '').includes('Stop Hauling');
+                    const stop1 = (last.impact || '').includes('Stop Zona 1');
+                    const stEl = document.getElementById('wxLiveStatus');
+                    stEl.textContent = stop ? 'STOP HAULING' : stop1 ? 'STOP ZONA 1' : (last.impact || '').includes('Standby') ? 'STANDBY' : 'NORMAL';
+                    stEl.className = 'text-base font-black font-tech mt-1 ' + (stop ? 'text-rose-400' : stop1 ? 'text-amber-400' : (last.impact || '').includes('Standby') ? 'text-amber-300' : 'text-emerald-400');
+                    document.getElementById('wxLiveStatusSub').textContent = stop ? 'Jalan licin — unit ADT standby, hauling dihentikan' : stop1 ? 'Zona 1 lempung ditutup — alihkan ke Zona 4 batu' : (last.impact || '').includes('Standby') ? 'Sebagian unit standby — pantau kondisi jalan' : 'Seluruh zona timbunan dapat dihampar';
+                } else {
+                    lc.textContent = '—'; document.getElementById('wxLiveRain').textContent = '— mm';
+                    document.getElementById('wxLiveWind').textContent = '— km/j';
+                    document.getElementById('wxLiveStatus').textContent = 'BELUM ADA LOG';
+                    document.getElementById('wxLiveStatusSub').textContent = 'Catat cuaca harian untuk status operasional';
+                }
+            }
+            document.getElementById('wxKpiTotal').textContent = wxData.log.length;
+            document.getElementById('wxKpiRain').textContent = rainM.length;
+            document.getElementById('wxKpiMm').textContent = mmM.toFixed(1) + ' mm';
+            document.getElementById('wxKpiTemp').textContent = tAvg.length ? (tAvg.reduce((a, b) => a + b, 0) / tAvg.length).toFixed(1) + ' °C' : '—';
+
+            // Tabel log 10 terakhir
+            document.getElementById('wxLogBody').innerHTML = log.slice(0, 10).map(e =>
+                '<tr class="border-b border-slate-900"><td class="py-1.5 text-slate-200">' + e.date + '</td>' +
+                '<td class="' + (wxIsRain(e) ? 'text-cyan-300' : 'text-amber-300') + '">' + e.cond + '</td>' +
+                '<td class="text-center text-slate-300">' + (e.tmin != null ? e.tmin + '–' + e.tmax : '-') + '</td>' +
+                '<td class="text-center text-slate-300">' + (e.wind != null ? e.wind : '-') + '</td>' +
+                '<td class="text-center text-slate-400">' + (e.wdir || '-') + '</td>' +
+                '<td class="text-center text-slate-300">' + (e.rh != null ? e.rh : '-') + '</td>' +
+                '<td class="text-center ' + (e.rain > 0 ? 'text-cyan-400 font-bold' : 'text-slate-500') + '">' + (e.rain || 0) + '</td>' +
+                '<td class="text-center ' + ((e.lostHours || 0) > 0 ? 'text-rose-400 font-bold' : 'text-slate-500') + '">' + (e.lostHours || 0).toFixed(1) + ' j</td>' +
+                '<td class="text-slate-400">' + (e.impact ? '<span class="' + ((e.impact.includes('Stop')) ? 'text-rose-300' : 'text-emerald-300') + '">' + e.impact + '</span> · ' : '') + (e.ket || '-') + '</td>' +
+                '<td class="text-center whitespace-nowrap"><button onclick="wxEdit(\'' + e.date + '\')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-sky-800 text-[9px] font-bold">EDIT</button> <button onclick="wxDel(\'' + e.date + '\')" class="px-1.5 py-0.5 rounded bg-rose-950 hover:bg-rose-800 text-rose-300 text-[9px] font-bold">DEL</button></td></tr>'
+            ).join('') || '<tr><td colspan="9" class="text-center text-slate-500 py-3">Belum ada catatan cuaca.</td></tr>';
+
+            // Rekap bulanan (sinkron jadwal)
+            const months = wxMonths();
+            document.getElementById('wxMonthlyBody').innerHTML = months.map(ym => {
+                const ml = wxData.log.filter(e => e.date.slice(0, 7) === ym);
+                const rain = ml.filter(wxIsRain).length;
+                const mm = ml.reduce((a, e) => a + (e.rain || 0), 0);
+                const temps = ml.filter(e => e.tmax != null).map(e => (e.tmin + e.tmax) / 2);
+                const wmax = ml.reduce((a, e) => Math.max(a, e.wind || 0), 0);
+                const counts = {};
+                ml.forEach(e => { counts[e.cond] = (counts[e.cond] || 0) + 1; });
+                const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+                return '<tr class="border-b border-slate-900"><td class="py-1.5 text-slate-200 font-bold">' + ym + '</td>' +
+                    '<td class="text-center ' + (ml.length ? 'text-slate-300' : 'text-rose-400') + '">' + ml.length + '</td>' +
+                    '<td class="text-center ' + (rain > 10 ? 'text-cyan-400' : 'text-slate-300') + '">' + rain + '</td>' +
+                    '<td class="text-center text-slate-300">' + mm.toFixed(1) + '</td>' +
+                    '<td class="text-center text-slate-300">' + (temps.length ? (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1) : '—') + '</td>' +
+                    '<td class="text-center text-slate-300">' + (wmax ? wmax : '—') + '</td>' +
+                    '<td class="text-center ' + (ml.reduce((s, e2) => s + (e2.lostHours || 0), 0) > 20 ? 'text-rose-400 font-bold' : 'text-slate-300') + '">' + ml.reduce((s, e2) => s + (e2.lostHours || 0), 0).toFixed(1) + '</td>' +
+                    '<td class="text-center ' + (ml.length && (ml.reduce((s, e2) => s + (e2.effHours || 0), 0) / (ml.length * 10)) >= 0.9 ? 'text-emerald-400' : 'text-amber-300') + '">' + (ml.length ? Math.round((ml.reduce((s, e2) => s + (e2.effHours || 0), 0) / (ml.length * 10)) * 100) + '%' : '—') + '</td>' +
+                    '<td class="' + (dom ? 'text-amber-300' : 'text-slate-500') + '">' + (dom ? dom[0] + ' (' + dom[1] + 'x)' : '—') + '</td>' +
+                    '<td class="text-center text-emerald-400 font-bold">' + wxMonthProgress(ym) + '</td></tr>';
+            }).join('');
+        }
+        function wxExportDailyPDF() {
+            if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) { alert('Pustaka PDF belum siap.'); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            wxLoad();
+            const log = wxData.log.slice().sort((a, b) => b.date.localeCompare(a.date));
+            if (!log.length) { alert('Belum ada catatan cuaca. Isi dulu log harian.'); return; }
+            let st = { name: 'Program Pengawasan Geoteknik Pad C Ext. Dam 6 TSF Banyuwangi' };
+            try { const s = JSON.parse(localStorage.getItem(SCH2_KEY)); if (s && s.settings) st = s.settings; } catch (e) {}
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+            doc.text('LAPORAN HARIAN CUACA LOKASI PEKERJAAN', 14, 15);
+            doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+            doc.text(st.name + ' • Pad C Ext. Dam 6 TSF Banyuwangi (-8.5985, 114.0375)', 14, 21);
+            doc.text('Dicetak: ' + new Date().toLocaleString('id-ID'), 14, 26);
+            doc.autoTable({ startY: 30, head: [['Tanggal', 'Kondisi', 'Suhu (°C)', 'Angin (km/j)', 'Arah', 'RH %', 'Hujan (mm)', 'Keterangan', 'Progres Jadwal']],
+                body: log.slice(0, 30).map(e => {
+                    let prog = '—';
+                    try { const s = JSON.parse(localStorage.getItem(SCH2_KEY));
+                        const ok = s.real.filter(x => x.date <= e.date).sort((a, b) => a.date.localeCompare(b.date));
+                        if (ok.length) prog = ok[ok.length - 1].pct + '%';
+                    } catch (err) {}
+                    return [e.date, e.cond, (e.tmin != null ? e.tmin + '–' + e.tmax : '-'), e.wind || '-', e.wdir || '-', e.rh != null ? e.rh : '-', e.rain || 0, e.ket || '-', prog];
+                }),
+                theme: 'grid', headStyles: { fillColor: [17, 24, 39] }, styles: { fontSize: 7 } });
+            doc.setFontSize(7.5);
+            doc.text('Sinkron otomatis: log cuaca + progress jadwal Tab 08 • Dikembangkan oleh Ir. Mohamad Hartadi • DCPKit PRO V2.7', 105, 285, { align: 'center' });
+            doc.save('Laporan_Harian_Cuaca_PadC_DAM6.pdf');
+        }
+        function wxExportMonthlyPDF() {
+            if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) { alert('Pustaka PDF belum siap.'); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            wxLoad();
+            let st = { name: 'Program Pengawasan Geoteknik Pad C Ext. Dam 6 TSF Banyuwangi', start: '2026-09-01', end: '2027-02-28' };
+            try { const s = JSON.parse(localStorage.getItem(SCH2_KEY)); if (s && s.settings) st = s.settings; } catch (e) {}
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold');
+            doc.text('LAPORAN BULANAN REKAP CUACA LOKASI PEKERJAAN', 14, 15);
+            doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+            doc.text(st.name + ' • Periode jadwal: ' + st.start + ' s.d. ' + st.end + ' • Dicetak: ' + new Date().toLocaleString('id-ID'), 14, 21);
+            doc.autoTable({ startY: 26, head: [['Bulan', 'Hari Dicatat', 'Hari Hujan', 'Curah Total (mm)', 'Suhu Rata² (°C)', 'Angin Maks (km/j)', 'Kondisi Dominan', 'Progres Jadwal s.d. Akhir Bulan']],
+                body: wxMonths().map(ym => {
+                    const ml = wxData.log.filter(e => e.date.slice(0, 7) === ym);
+                    const rain = ml.filter(wxIsRain).length;
+                    const mm = ml.reduce((a, e) => a + (e.rain || 0), 0);
+                    const temps = ml.filter(e => e.tmax != null).map(e => (e.tmin + e.tmax) / 2);
+                    const wmax = ml.reduce((a, e) => Math.max(a, e.wind || 0), 0);
+                    const counts = {}; ml.forEach(e => { counts[e.cond] = (counts[e.cond] || 0) + 1; });
+                    const dom = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+                    return [ym, ml.length, rain, mm.toFixed(1), temps.length ? (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1) : '—', wmax || '—', dom ? dom[0] + ' (' + dom[1] + 'x)' : '—', wxMonthProgress(ym)];
+                }),
+                theme: 'grid', headStyles: { fillColor: [17, 24, 39] }, styles: { fontSize: 8 } });
+            const allMl = wxData.log;
+            const rainDaysAll = allMl.filter(wxIsRain).length;
+            const mmAll = allMl.reduce((a, e) => a + (e.rain || 0), 0);
+            const lostAll = allMl.reduce((a, e) => a + (e.lostHours || 0), 0);
+            const effAll = allMl.length ? (allMl.reduce((a, e) => a + (e.effHours || 0), 0) / (allMl.length * 10)) * 100 : 100;
+            doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+            doc.text('NARASI REKAP CUACA & LOST TIME RAIN DELAY', 14, doc.lastAutoTable.finalY + 8);
+            doc.setFont('helvetica', 'normal');
+            doc.text(doc.splitTextToSize('Berdasarkan rekaman pengamatan cuaca lapangan, teridentifikasi ' + rainDaysAll + ' hari hujan dengan akumulasi curah hujan ' + mmAll.toFixed(1) + ' mm. Kondisi meteorologis ini menyebabkan total waktu kerja hilang (lost time rain delay) sebesar ' + lostAll.toFixed(1) + ' jam dengan efektivitas kerja ' + Math.round(effAll) + '%. Rekomendasi: selama hujan, penimbunan lempung Zona 1 ditutup/dialihkan ke material batu Zona 4 (OMC + 3%) untuk meminimalkan lost time.', 260), 14, doc.lastAutoTable.finalY + 13);
+            doc.setFontSize(7.5);
+            doc.text('Rekap bulanan mengikuti rentang pengaturan jadwal Tab 08 • Dikembangkan oleh Ir. Mohamad Hartadi • DCPKit PRO V2.7', 148, 200, { align: 'center' });
+            doc.save('Laporan_Bulanan_Cuaca_PadC_DAM6.pdf');
+        }
+        function initWxModule() {
+            // Overlay buttons (sekali)
+            const host = document.getElementById('wxOverlayBtns');
+            if (!host.dataset.built) {
+                host.innerHTML = WX_OVERLAYS.map(o =>
+                    '<button data-ov="' + o[0] + '" onclick="wxSetOverlay(\'' + o[0] + '\')" class="px-2 py-1 rounded text-[10px] font-bold border transition bg-slate-900 border-slate-700 text-slate-300 hover:text-white"><i class="fa-solid ' + o[2] + ' mr-1"></i>' + o[1] + '</button>').join('');
+                host.dataset.built = '1';
+            }
+            if (!document.getElementById('wxDate').value) document.getElementById('wxDate').value = new Date().toISOString().slice(0, 10);
+            wxSetOverlay(wxOverlay);
+            wxRenderAll();
+        }
+
         function triggerChatPreset(text) {
             document.getElementById('chatInput').value = text;
             processChat();
@@ -7901,7 +8663,46 @@
             let replyHtml = "";
             let speechText = "";
 
-            if (lower.includes('aplikasi') || lower.includes('my apps') || lower.includes('daftar') || lower.includes('portofolio')) {
+            // ===== V2.6: CUACA & JADWAL PEKERJAAN =====
+            if (lower.includes('cuaca') || lower.includes('windy') || lower.includes('hujan') || lower.includes('prakiraan')) {
+                wxLoad();
+                const ym = new Date().toISOString().slice(0, 7);
+                const ml = wxData.log.filter(e => e.date.slice(0, 7) === ym);
+                const rainDays = ml.filter(wxIsRain).length;
+                const mm = ml.reduce((a, e) => a + (e.rain || 0), 0);
+                replyHtml = `
+                    <div class="space-y-2 font-mono text-[11px]">
+                        <b class="text-sky-300 text-xs flex items-center gap-1.5"><i class="fa-solid fa-cloud-sun-rain"></i> MONITORING CUACA LOKASI PEKERJAAN — TAB 09</b>
+                        <p class="text-slate-200 leading-relaxed">Aplikasi dilengkapi <b>peta prediksi cuaca profesional Windy.com</b> (8 overlay: radar, satelit, angin, hujan, gelombang, suhu, awan, embusan) di titik tapak Pad C TSF Banyuwangi (-8.5985, 114.0375), plus <b>pencatatan cuaca harian</b> yang tersinkronisasi ke laporan harian &amp; rekap bulanan.</p>
+                        <div class="grid grid-cols-3 gap-1.5 text-center">
+                            <div class="bg-slate-950 border border-sky-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Hari hujan bulan ini</span><br><b class="text-cyan-400">${rainDays}</b></div>
+                            <div class="bg-slate-950 border border-sky-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Curah hujan (mm)</span><br><b class="text-emerald-400">${mm.toFixed(1)}</b></div>
+                            <div class="bg-slate-950 border border-sky-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Total catatan</span><br><b class="text-sky-400">${wxData.log.length}</b></div>
+                        </div>
+                        <button onclick="switchTab('tabWx')" class="px-2.5 py-1 rounded bg-sky-900 border border-sky-500 text-sky-200 font-bold hover:bg-sky-800 transition"><i class="fa-solid fa-arrow-right"></i> BUKA TAB 09 — MONITORING CUACA</button>
+                    </div>`;
+                const lostM2 = ml.reduce((a2, e2) => a2 + (e2.lostHours || 0), 0);
+                const effM2 = ml.length ? Math.round((ml.reduce((a2, e2) => a2 + (e2.effHours || 0), 0) / (ml.length * 10)) * 100) : 100;
+                const insAt = replyHtml.lastIndexOf('</div>');
+                if (insAt > 0) replyHtml = replyHtml.slice(0, insAt) + '<div class="bg-slate-950 border border-rose-800 rounded p-1.5 mt-1"><span class="text-[9px] text-slate-400">LOST TIME RAIN DELAY BULAN INI</span><br><b class="text-rose-400">' + lostM2.toFixed(1) + ' jam</b> <span class="text-slate-400 text-[9px]">• efektivitas kerja ' + effM2 + '%</span></div>' + replyHtml.slice(insAt);
+                speechText = "Fitur monitoring cuaca dengan peta Windy dan pencatatan cuaca harian tersedia di tab sembilan. Bulan ini tercatat " + rainDays + " hari hujan dengan lost time rain delay " + lostM2.toFixed(1) + " jam.";
+            } else if (lower.includes('jadwal pekerjaan') || lower.includes('jadwal umum') || lower.includes('time schedule') || lower.includes('september') || lower.includes('februari 2027')) {
+                sch2Load();
+                const prog = sch2ProgAktual();
+                const dur = sch2Days(sch2Data.settings.start, sch2Data.settings.settings ? sch2Data.settings.end : sch2Data.settings.end);
+                replyHtml = `
+                    <div class="space-y-2 font-mono text-[11px]">
+                        <b class="text-lime-300 text-xs flex items-center gap-1.5"><i class="fa-solid fa-diagram-project"></i> JADWAL PEKERJAAN UMUM — TAB 08</b>
+                        <p class="text-slate-200 leading-relaxed">Program: <b>${sch2Data.settings.name}</b> berlangsung <b>${sch2Data.settings.start}</b> s.d. <b>${sch2Data.settings.end}</b> (${dur} hari ≈ ${(dur / 30.44).toFixed(1)} bulan). Tanggal mulai &amp; selesai <b>editable</b> dan otomatis tersinkronisasi ke KPI, kurva S, item pekerjaan, serta rekap cuaca.</p>
+                        <div class="grid grid-cols-3 gap-1.5 text-center">
+                            <div class="bg-slate-950 border border-lime-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Item pekerjaan</span><br><b class="text-lime-400">${sch2Data.items.length}</b></div>
+                            <div class="bg-slate-950 border border-lime-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Progress aktual</span><br><b class="text-emerald-400">${prog.toFixed(1)}%</b></div>
+                            <div class="bg-slate-950 border border-lime-800 rounded p-1.5"><span class="text-slate-400 text-[9px]">Realisasi tercatat</span><br><b class="text-cyan-400">${sch2Data.real.length}</b></div>
+                        </div>
+                        <button onclick="switchTab('tabSch2')" class="px-2.5 py-1 rounded bg-lime-900 border border-lime-500 text-lime-200 font-bold hover:bg-lime-800 transition"><i class="fa-solid fa-arrow-right"></i> BUKA TAB 08 — JADWAL PEKERJAAN</button>
+                    </div>`;
+                speechText = "Jadwal pekerjaan September dua ribu dua puluh enam hingga Februari dua ribu dua puluh tujuh tersedia di tab delapan. Tanggal mulai dan selesai dapat diedit.";
+            } else if (lower.includes('aplikasi') || lower.includes('my apps') || lower.includes('daftar') || lower.includes('portofolio')) {
                 // Generate scrollable list of all 61 apps directly inside the chatbot bubble
                 let appsItemsHtml = '';
                 const catColors = {
@@ -8812,7 +9613,7 @@
                 <a href="https://github.com/AdiKds" target="_blank" class="text-slate-300 hover:text-white transition flex items-center gap-1"><i class="fa-brands fa-github"></i> GitHub</a>
             </div>
             <div class="text-slate-500 text-[10px] text-center md:text-right">
-                © 2026 DCPKIT PRO V2.0 • GISTM 2020 • SNI 8460 • BANYUWANGI SITE
+                © 2026 DCPKIT PRO V2.6 • GISTM 2020 • SNI 8460 • BANYUWANGI SITE
             </div>
         </div>
     </footer>
